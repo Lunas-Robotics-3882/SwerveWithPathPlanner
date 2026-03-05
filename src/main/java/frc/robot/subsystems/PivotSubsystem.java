@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //CTRE Imports Motor Imports
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
@@ -25,44 +26,32 @@ import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-public class Climber extends SubsystemBase {
+public class PivotSubsystem extends SubsystemBase {
 
 
   private double position;
 
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
-  private ShuffleboardTab tab = Shuffleboard.getTab("Climber");
-  private GenericEntry climberEncoder = tab.add("Climber Encoder", 0).getEntry();
-  private GenericEntry climberVoltage =
-        tab.add("Climber Voltage", 0)
-          .getEntry();
-  /** Creates a new ClimberSubsystem. */
+  private ShuffleboardTab tab = Shuffleboard.getTab("Pivot");
+  private GenericEntry pivotEncoder = tab.add("Pivot Encoder", 0).getEntry();
+  private GenericEntry pivotVelocity = tab.add("Pivot Velocity", 0).getEntry();
+  /** Creates a new PivotSubsystem. */
 
-
-  private final TalonFX climber = new TalonFX(13, "LUNACAN");
+  private final CANBus canbus = new CANBus();
+  private final TalonFX pivot = new TalonFX(55,canbus);
   /* Be able to switch which control request to use based on a button press */
-  /* Start at position 0, use slot 0 */
-  private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
   /* Start at position 0, use slot 1 */
   private final PositionTorqueCurrentFOC m_positionTorque = new PositionTorqueCurrentFOC(0).withSlot(1);
   /* Keep a brake request so we can disable the motor */
   private final NeutralOut m_brake = new NeutralOut();
   private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
 
-
+  //Encoder Values
   double homePosition = 0;
-  double L4Position = -33.9;
-  double L3Position = 0;
-  double L2Position = 0;
-  double loadPosition = 26.18;
+  double DownPos = 129;
+  double ClimbPosition = 80;
 
-  private final CANrange canrange = new CANrange(13, "LUNACAN");
-
-
-  public Climber() {
-
-    
-
+  public PivotSubsystem() {
     position = 0;
   
     TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -80,19 +69,9 @@ public class Climber extends SubsystemBase {
     configs.TorqueCurrent.withPeakForwardTorqueCurrent(Amps.of(120))
       .withPeakReverseTorqueCurrent(Amps.of(-120));
 
-     /* Voltage-based velocity requires a velocity feed forward to account for the back-emf of the motor */
-     configs.Slot0.kS = 0.1; // To account for friction, add 0.1 V of static feedforward
-     configs.Slot0.kV = 0.12; // Kraken X60 is a 500 kV motor, 500 rpm per V = 8.333 rps per V, 1/8.33 = 0.12 volts / rotation per second
-     configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in 0.11 V output
-     configs.Slot0.kI = 0; // No output for integrated error
-     configs.Slot0.kD = 0; // No output for error derivative
-     // Peak output of 8 volts
-     configs.Voltage.withPeakForwardVoltage(Volts.of(8))
-       .withPeakReverseVoltage(Volts.of(-8));
-      climber.getConfigurator().apply(configs);
-      climber.setNeutralMode(NeutralModeValue.Brake);
-      climber.setPosition(position);
-
+      pivot.getConfigurator().apply(configs);
+      pivot.setNeutralMode(NeutralModeValue.Brake);
+      pivot.setPosition(position);
   }
 
 public void setHoldPosition(double holdposition) {
@@ -101,49 +80,28 @@ public void setHoldPosition(double holdposition) {
 
 public void setVelocity(double speed)
 {
-  climber.setControl(m_velocityVoltage.withVelocity(speed));
-  position = climber.getPosition().getValueAsDouble();
+  pivot.setControl(m_velocityVoltage.withVelocity(speed));
+  position = pivot.getPosition().getValueAsDouble();
 }
 
 public boolean CheckPositionHome()
 {
- return MathUtil.isNear(homePosition,climber.getPosition().getValueAsDouble(), 1);
+ return MathUtil.isNear(homePosition,pivot.getPosition().getValueAsDouble(), 1);
 }
 
-public boolean CheckPositionLoad()
+public boolean CheckDownPost()
 {
- return MathUtil.isNear(loadPosition,climber.getPosition().getValueAsDouble(), 1);
-}
-
-public boolean CheckPositionL4()
-{
- return MathUtil.isNear(L4Position,climber.getPosition().getValueAsDouble(), 1);
-}
-
-public boolean CheckPositionL3()
-{
- return MathUtil.isNear(L3Position,climber.getPosition().getValueAsDouble(), 1);
-}
-
-public boolean heightCheck()
-{
-  return canrange.getIsDetected().getValue();
-}
-
-public boolean CheckPositionL2()
-{
- return MathUtil.isNear(L2Position,climber.getPosition().getValueAsDouble(), 1);
+ return MathUtil.isNear(DownPos,pivot.getPosition().getValueAsDouble(), 1);
 }
 
 public void setPosition(double setPoint)
 {
-  climber.setControl(m_positionTorque.withPosition(setPoint));
+  pivot.setControl(m_positionTorque.withPosition(setPoint));
 }
-
 
 public double getEncoder()
 {
-  return climber.getPosition().getValueAsDouble();
+  return pivot.getPosition().getValueAsDouble();
 }
 
 public Command slowUp()
@@ -159,12 +117,12 @@ public Command slowDown()
 
 public void stop()
 {
-  climber.setControl(m_brake);
+  pivot.setControl(m_brake);
 }
 
 public Command newStop() {
 
-  return run (() -> this.setPosition(climber.getPosition().getValueAsDouble()));
+  return run (() -> this.setPosition(pivot.getPosition().getValueAsDouble()));
 }
 
 public Command stopCommand()
@@ -183,28 +141,24 @@ public Command setHomePosition()
   return run(() -> this.setPosition(homePosition)); 
 }
 
-public Command setL4Position()
+
+public Command setDownPosition()
 {
-  return run(() -> this.setPosition(L4Position)); 
+  return run(() -> this.setPosition(DownPos)); 
 }
 
-public Command setL3Position()
+public Command setClimbPosition()
 {
-  return run(() -> this.setPosition(L3Position)); 
-}
-
-public Command setL2Position()
-{
-  return run(() -> this.setPosition(L2Position)); 
+  return run (() -> this.setPosition(ClimbPosition));
 }
 
 
 @Override
 public void periodic() {
-//climber.setControl(m_positionTorque.withPosition(position));
+//pivot.setControl(m_positionTorque.withPosition(position));
 //SmartDashboard.putBoolean("limit checks", LimitChecks());
-SmartDashboard.putNumber("Climber Encoder", climber.getPosition().getValueAsDouble());
-SmartDashboard.putNumber("Climber Velocity", climber.getVelocity().getValueAsDouble());
+SmartDashboard.putNumber("Pivot Encoder", pivot.getPosition().getValueAsDouble());
+SmartDashboard.putNumber("Pivot Velocity", pivot.getVelocity().getValueAsDouble());
 
 }
 }

@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.Commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,7 +27,7 @@ public class FieldGeomUtils {
     public static Rotation2d getAngleToHub(Pose2d robotPose) {
         Translation2d relativeTranslation = getTargetHub().getTranslation().minus(robotPose.getTranslation());
         // .getAngle() is the vector from robot to hub. Adding 180 flips it to face the rear.
-        return relativeTranslation.getAngle().plus(Rotation2d.fromDegrees(0));
+        return relativeTranslation.getAngle().plus(Rotation2d.fromDegrees(180));
     }
 
     /**

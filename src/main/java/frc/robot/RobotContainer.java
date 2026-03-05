@@ -19,16 +19,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberSubsytem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.FieldGeomUtils;
+
+import frc.robot.Commands.FieldGeomUtils;
 
 public class RobotContainer {
 
- private Climber climber = new Climber();
+ private ClimberSubsytem climber = new ClimberSubsytem();
 
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -113,8 +113,8 @@ joystick.y().whileTrue(drivetrain.applyRequest(() -> {
     var state = drivetrain.getState();
     
     // 1. Get raw inputs from joysticks
-    double vx = joystick.getLeftX() * MaxSpeed;
-    double vy = -joystick.getLeftY() * MaxSpeed;
+    double vx = -joystick.getLeftY() * MaxSpeed;
+    double vy = -joystick.getLeftX() * MaxSpeed;
 
     /* 2. POSE PREDICTION (Lookahead)
      * We predict where the robot will be in 50ms to compensate for 
@@ -152,6 +152,14 @@ joystick.y().whileTrue(drivetrain.applyRequest(() -> {
 climber.setDefaultCommand(climber.stopCommand());
 joystick.pov(0).whileTrue(climber.slowDown());
 joystick.pov(180).whileTrue(climber.slowUp());
+joystick.pov(90).whileTrue(climber.withPosition(0));
+joystick.pov(270).whileTrue(climber.withPosition(140));
+
+//Intake Commands
+
+//Indexer Commands
+
+//Shoot Commands
 
 
         drivetrain.registerTelemetry(logger::telemeterize);
