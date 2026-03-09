@@ -82,7 +82,7 @@ private GenericEntry intakeVoltage =
 
   public void intake()
 {
-  m_intake.setControl(m_velocityVoltage.withVelocity(-10));
+  m_intake.setControl(m_velocityVoltage.withVelocity(-100));
 }
 
   public void outtake()
