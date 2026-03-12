@@ -102,7 +102,7 @@ public void outtakeOtherSpeed()
 }
 
 
-public Command shooterCommand()
+public Command shootCommand()
 {
   return run(() -> this.shooter());
 }
@@ -124,7 +124,7 @@ public Command stop()
 
 
   @Override
-  public void periodic() {
+public void periodic() {
     // This method will be called once per scheduler run
 SmartDashboard.putNumber("Shooter Encoder", m_shooter.getPosition().getValueAsDouble());
 SmartDashboard.putNumber("Shooter Velocity", m_shooter.getVelocity().getValueAsDouble());

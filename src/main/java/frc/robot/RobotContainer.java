@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 
@@ -29,11 +30,26 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Commands.IntakeCommand;
 
+import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Commands.FieldGeomUtils;
 
 public class RobotContainer {
 
+// Subsystems
  private ClimberSubsytem climber = new ClimberSubsytem();
+ private IntakeSubsystem intake = new IntakeSubsystem();
+//private PivotSubsystem pivot = new PivotSubsystem();
+
+
+ private IndexerSubsystem indexer = new IndexerSubsystem();
+ private ShooterSubsystem shooter = new ShooterSubsystem();
+ private FeederSubsystem feeder = new FeederSubsystem();
+
+ //Commands
+ ParallelCommandGroup shootcommandParallel = new ParallelCommandGroup(feeder.feederCommand(), indexer.indexCommand(), shooter.shootCommand());
 
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -52,7 +68,7 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController joystick = new CommandXboxController(0);
+    private final CommandXboxController xbox = new CommandXboxController(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -92,9 +108,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-xbox.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-xbox.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-xbox.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -105,27 +121,27 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        xbox.a().whileTrue(drivetrain.applyRequest(() -> brake));
 
-        // joystick.povUp().whileTrue(drivetrain.applyRequest(() ->
+        // xbox.povUp().whileTrue(drivetrain.applyRequest(() ->
         //     forwardStraight.withVelocityX(0.5).withVelocityY(0))
         // );
-        // joystick.povDown().whileTrue(drivetrain.applyRequest(() ->
+        // xbox.povDown().whileTrue(drivetrain.applyRequest(() ->
         //     forwardStraight.withVelocityX(-0.5).withVelocityY(0))
         // );
 
         // Reset the field-centric heading on left bumper press.
-        joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        xbox.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
 
 
-        // While holding Y, the robot points at the hub but can still be moved with the left stick
-joystick.y().whileTrue(drivetrain.applyRequest(() -> {
+    // While holding Y, the robot points at the hub but can still be moved with the left stick
+    xbox.y().whileTrue(drivetrain.applyRequest(() -> {
     var state = drivetrain.getState();
     
-    // 1. Get raw inputs from joysticks
-    double vx = -joystick.getLeftY() * MaxSpeed;
-    double vy = -joystick.getLeftX() * MaxSpeed;
+    // 1. Get raw inputs from xboxs
+    double vx = -xbox.getLeftY() * MaxSpeed;
+    double vy = -xbox.getLeftX() * MaxSpeed;
 
     /* 2. POSE PREDICTION (Lookahead)
      * We predict where the robot will be in 50ms to compensate for 
@@ -161,17 +177,28 @@ joystick.y().whileTrue(drivetrain.applyRequest(() -> {
 
 //Climber Controls
 climber.setDefaultCommand(climber.stopCommand());
-joystick.pov(0).whileTrue(climber.slowDown());
-joystick.pov(180).whileTrue(climber.slowUp());
-joystick.pov(90).whileTrue(climber.withPosition(0));
-joystick.pov(270).whileTrue(climber.withPosition(140));
+xbox.pov(0).whileTrue(climber.slowDown());
+xbox.pov(180).whileTrue(climber.slowUp());
+xbox.pov(90).whileTrue(climber.setHomePosition());
+xbox.pov(270).whileTrue(climber.setUpPosition());
 
 //Intake Commands
+  intake.setDefaultCommand(intake.stop());
+  xbox.rightBumper().whileTrue(intake.intakeCommand());
+  xbox.rightTrigger().whileTrue(intake.outtakeCommand());
 
-//Indexer Commands
+//Pivot Commands
+
+//Test Shooter Commands
+//Test 
+
+//default shoot commands
+//indexer.setDefaultCommand(indexer.stop());
+//shooter.setDefaultCommand(shooter.stop());
+//feeder.setDefaultCommand(feeder.stop());
 
 //Shoot Commands
-
+//xbox.leftTrigger().whileTrue(shootcommandParallel);
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
