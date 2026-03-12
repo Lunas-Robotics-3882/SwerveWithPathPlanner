@@ -29,11 +29,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.hardware.CANrange;
 import edu.wpi.first.wpilibj.Timer;
 
-
+//indexer positive
 public class IndexerSubsystem extends SubsystemBase {
 
   private final CANBus canbus = new CANBus();
-  private final TalonFX m_index = new TalonFX(50, canbus);
+  private final TalonFX m_index = new TalonFX(49, canbus);
 
   /* Start at velocity 0, use slot 1 */
   private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
@@ -82,17 +82,17 @@ private GenericEntry indexVoltage =
 
   public void index()
 {
-  m_index.setControl(m_velocityVoltage.withVelocity(-10));
+  m_index.setControl(m_velocityVoltage.withVelocity(75));
 }
 
   public void outtake()
 {
-    m_index.setControl(m_velocityVoltage.withVelocity(30));
+    m_index.setControl(m_velocityVoltage.withVelocity(-30));
 }
 
 public void outtakeOtherSpeed()
 {
-    m_index.setControl(m_velocityVoltage.withVelocity(28));
+    m_index.setControl(m_velocityVoltage.withVelocity(-28));
 }
 
 

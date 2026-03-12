@@ -29,11 +29,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.hardware.CANrange;
 import edu.wpi.first.wpilibj.Timer;
 
-
+//feeder negative
 public class FeederSubsystem extends SubsystemBase {
 
   private final CANBus canbus = new CANBus();
-  private final TalonFX m_feeder = new TalonFX(50, canbus);
+  private final TalonFX m_feeder = new TalonFX(40, canbus);
 
   /* Start at velocity 0, use slot 1 */
   private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
@@ -82,7 +82,7 @@ private GenericEntry feederVoltage =
 
   public void feeder()
 {
-  m_feeder.setControl(m_velocityVoltage.withVelocity(-10));
+  m_feeder.setControl(m_velocityVoltage.withVelocity(-40));
 }
 
   public void outtake()

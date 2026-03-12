@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.hardware.CANrange;
 import edu.wpi.first.wpilibj.Timer;
 
-
+//positive intake
 public class IntakeSubsystem extends SubsystemBase {
 
   private final CANBus canbus = new CANBus();
@@ -41,13 +41,6 @@ public class IntakeSubsystem extends SubsystemBase {
   private final NeutralOut m_brake = new NeutralOut();
 
 
-private ShuffleboardTab tab = Shuffleboard.getTab("Intake");
-private GenericEntry intakeSpeed =
-      tab.add("Intake Speed", 0)
-         .getEntry();
-private GenericEntry intakeVoltage =
-      tab.add("Intake Voltage", 0)
-         .getEntry();
 
 
 
@@ -82,17 +75,17 @@ private GenericEntry intakeVoltage =
 
   public void intake()
 {
-  m_intake.setControl(m_velocityVoltage.withVelocity(-100));
+  m_intake.setControl(m_velocityVoltage.withVelocity(100));
 }
 
   public void outtake()
 {
-    m_intake.setControl(m_velocityVoltage.withVelocity(30));
+    m_intake.setControl(m_velocityVoltage.withVelocity(-30));
 }
 
 public void outtakeOtherSpeed()
 {
-    m_intake.setControl(m_velocityVoltage.withVelocity(28));
+    m_intake.setControl(m_velocityVoltage.withVelocity(-28));
 }
 
 

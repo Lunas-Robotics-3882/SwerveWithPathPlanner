@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Commands.IntakeCommand;
 
@@ -39,7 +40,7 @@ public class RobotContainer {
 
 // Subsystems
  private IntakeSubsystem intake = new IntakeSubsystem();
-//private PivotSubsystem pivot = new PivotSubsystem();
+private PivotSubsystem pivot = new PivotSubsystem();
 
 
  private IndexerSubsystem indexer = new IndexerSubsystem();
@@ -49,7 +50,7 @@ public class RobotContainer {
  //Commands
  ParallelCommandGroup shootcommandParallel = new ParallelCommandGroup(feeder.feederCommand(), indexer.indexCommand(), shooter.shootCommand());
 
-    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed =  TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -106,8 +107,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-xbox.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-xbox.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(-xbox.getLeftY() * 0.5 * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-xbox.getLeftX() * 0.5 * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-xbox.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -134,64 +135,71 @@ public class RobotContainer {
 
 
     // While holding Y, the robot points at the hub but can still be moved with the left stick
-    xbox.y().whileTrue(drivetrain.applyRequest(() -> {
-    var state = drivetrain.getState();
+//     xbox.y().whileTrue(drivetrain.applyRequest(() -> {
+//     var state = drivetrain.getState();
     
-    // 1. Get raw inputs from xboxs
-    double vx = -xbox.getLeftY() * MaxSpeed;
-    double vy = -xbox.getLeftX() * MaxSpeed;
+//     // 1. Get raw inputs from xboxs
+//     double vx = -xbox.getLeftY() * MaxSpeed;
+//     double vy = -xbox.getLeftX() * MaxSpeed;
 
-    /* 2. POSE PREDICTION (Lookahead)
-     * We predict where the robot will be in 50ms to compensate for 
-     * latency and the robot's own momentum.
-     */
-    double lookaheadSeconds = 0.050; 
-    Pose2d futurePose = new Pose2d(
-        state.Pose.getX() + (state.Speeds.vxMetersPerSecond * lookaheadSeconds),
-        state.Pose.getY() + (state.Speeds.vyMetersPerSecond * lookaheadSeconds),
-        state.Pose.getRotation()
-    );
+//     /* 2. POSE PREDICTION (Lookahead)
+//      * We predict where the robot will be in 50ms to compensate for 
+//      * latency and the robot's own momentum.
+//      */
+//     double lookaheadSeconds = 0.050; 
+//     Pose2d futurePose = new Pose2d(
+//         state.Pose.getX() + (state.Speeds.vxMetersPerSecond * lookaheadSeconds),
+//         state.Pose.getY() + (state.Speeds.vyMetersPerSecond * lookaheadSeconds),
+//         state.Pose.getRotation()
+//     );
 
-    // 3. Calculate target angles using the predicted pose
-    Rotation2d targetAngle = FieldGeomUtils.getAngleToHub(futurePose);
-    double distance = FieldGeomUtils.getDistanceToHub(state.Pose);
+//     // 3. Calculate target angles using the predicted pose
+//     Rotation2d targetAngle = FieldGeomUtils.getAngleToHub(futurePose);
+//     double distance = FieldGeomUtils.getDistanceToHub(state.Pose);
 
-    // 4. LOGGING - Send everything to SmartDashboard for tuning
-    SmartDashboard.putNumber("AutoAim/Distance Meters", distance);
-    SmartDashboard.putNumber("AutoAim/Target Heading", targetAngle.getDegrees());
-    SmartDashboard.putNumber("AutoAim/Current Heading", state.Pose.getRotation().getDegrees());
-    SmartDashboard.putNumber("AutoAim/Heading Error", targetAngle.minus(state.Pose.getRotation()).getDegrees());
-    // This logs how much the lookahead is actually changing your target
-    SmartDashboard.putNumber("AutoAim/Lookahead Offset", 
-        targetAngle.minus(FieldGeomUtils.getAngleToHub(state.Pose)).getDegrees());
+//     // 4. LOGGING - Send everything to SmartDashboard for tuning
+//     SmartDashboard.putNumber("AutoAim/Distance Meters", distance);
+//     SmartDashboard.putNumber("AutoAim/Target Heading", targetAngle.getDegrees());
+//     SmartDashboard.putNumber("AutoAim/Current Heading", state.Pose.getRotation().getDegrees());
+//     SmartDashboard.putNumber("AutoAim/Heading Error", targetAngle.minus(state.Pose.getRotation()).getDegrees());
+//     // This logs how much the lookahead is actually changing your target
+//     SmartDashboard.putNumber("AutoAim/Lookahead Offset", 
+//         targetAngle.minus(FieldGeomUtils.getAngleToHub(state.Pose)).getDegrees());
 
-    // 5. Apply Request with Velocity control for smoothness
-    return driveAtTarget
-        .withVelocityX(vx)
-        .withVelocityY(vy)
-        .withTargetDirection(targetAngle);
-}));
+//     // 5. Apply Request with Velocity control for smoothness
+//     return driveAtTarget
+//         .withVelocityX(vx)
+//         .withVelocityY(vy)
+//         .withTargetDirection(targetAngle);
+// }));
 
 
 
 //Intake Commands
-  intake.setDefaultCommand(intake.stop());
-  xbox.rightBumper().whileTrue(intake.intakeCommand());
-  xbox.rightTrigger().whileTrue(intake.outtakeCommand());
+intake.setDefaultCommand(intake.stop());
+xbox.rightBumper().whileTrue(intake.intakeCommand());
+xbox.rightTrigger().whileTrue(intake.outtakeCommand());
 
 //Pivot Commands
+pivot.setDefaultCommand(pivot.stopCommand());
+xbox.pov(0).whileTrue(pivot.slowUp());
+xbox.pov(180).whileTrue(pivot.slowDown());
 
 //Test Shooter Commands
 //Testing
 
 
 //default shoot commands
-//indexer.setDefaultCommand(indexer.stop());
-//shooter.setDefaultCommand(shooter.stop());
-//feeder.setDefaultCommand(feeder.stop());
+indexer.setDefaultCommand(indexer.stop());
+shooter.setDefaultCommand(shooter.stop());
+feeder.setDefaultCommand(feeder.stop());
+
 
 //Shoot Commands
-//xbox.leftTrigger().whileTrue(shootcommandParallel);
+xbox.b().whileTrue(shooter.shootCommand());
+xbox.x().whileTrue(shootcommandParallel);
+
+xbox.y().whileTrue(indexer.outtakeCommand());
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

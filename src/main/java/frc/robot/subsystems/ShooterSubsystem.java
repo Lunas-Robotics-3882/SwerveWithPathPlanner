@@ -30,12 +30,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.hardware.CANrange;
 import edu.wpi.first.wpilibj.Timer;
 
-
+// Shooter negative
 public class ShooterSubsystem extends SubsystemBase {
 
   private final CANBus canbus = new CANBus();
   private final TalonFX m_shooter = new TalonFX(60, canbus);
-  private final TalonFX m_followershooter = new TalonFX(67, canbus);
+  private final TalonFX m_followershooter = new TalonFX(61, canbus);
 
   /* Start at velocity 0, use slot 1 */
   private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
@@ -88,7 +88,7 @@ private GenericEntry shooterVoltage =
 
   public void shooter()
 {
-  m_shooter.setControl(m_velocityVoltage.withVelocity(-10));
+  m_shooter.setControl(m_velocityVoltage.withVelocity(-52.5));
 }
 
   public void outtake()
