@@ -178,7 +178,8 @@ xbox.pov(270).whileTrue(climber.setUpPosition());
 //Pivot Commands
 
 //Test Shooter Commands
-//Test 
+//Testing
+
 
 //default shoot commands
 //indexer.setDefaultCommand(indexer.stop());
