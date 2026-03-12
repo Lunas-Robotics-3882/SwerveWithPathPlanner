@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.ClimberSubsytem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -39,7 +38,6 @@ import frc.robot.Commands.FieldGeomUtils;
 public class RobotContainer {
 
 // Subsystems
- private ClimberSubsytem climber = new ClimberSubsytem();
  private IntakeSubsystem intake = new IntakeSubsystem();
 //private PivotSubsystem pivot = new PivotSubsystem();
 
@@ -175,12 +173,6 @@ public class RobotContainer {
 }));
 
 
-//Climber Controls
-climber.setDefaultCommand(climber.stopCommand());
-xbox.pov(0).whileTrue(climber.slowDown());
-xbox.pov(180).whileTrue(climber.slowUp());
-xbox.pov(90).whileTrue(climber.setHomePosition());
-xbox.pov(270).whileTrue(climber.setUpPosition());
 
 //Intake Commands
   intake.setDefaultCommand(intake.stop());
