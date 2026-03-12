@@ -16,6 +16,7 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -34,6 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private final CANBus canbus = new CANBus();
   private final TalonFX m_shooter = new TalonFX(60, canbus);
+  private final TalonFX m_followershooter = new TalonFX(67, canbus);
 
   /* Start at velocity 0, use slot 1 */
   private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
@@ -66,6 +68,10 @@ private GenericEntry shooterVoltage =
   configs.Voltage.withPeakForwardVoltage(8).withPeakReverseVoltage(-8);
   m_shooter.getConfigurator().apply(configs);
   m_shooter.setNeutralMode(NeutralModeValue.Coast);
+
+  m_followershooter.getConfigurator().apply(configs);
+  m_followershooter.setControl(new Follower(m_shooter.getDeviceID(),MotorAlignmentValue.Opposed));
+  m_followershooter.setNeutralMode(NeutralModeValue.Coast);
   }
 
 //  COMMANDS  //
