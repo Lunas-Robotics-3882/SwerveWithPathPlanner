@@ -184,6 +184,13 @@ private PivotSubsystem pivot = new PivotSubsystem();
     SmartDashboard.putNumber("AutoAim/Lookahead Offset", 
         targetAngle.minus(FieldGeomUtils.getAngleToHub(state.Pose)).getDegrees());
 
+    // These are the magic numbers. Start with 5.0 and 0.0.
+    driveAtTarget.HeadingController.setPID(5.0, 0.0, 0.0);
+    
+    // IMPORTANT: Tell the controller that -180 and 180 degrees are the same point
+    // so it doesn't try to spin the long way around.
+    driveAtTarget.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
+
     // 5. Apply Request with Velocity control for smoothness
     return driveAtTarget
         .withVelocityX(vx)
