@@ -29,7 +29,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Commands.IntakeCommand;
-
+import frc.robot.Commands.ShootCommand;
+import frc.robot.Commands.ShootCommandAuto;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -48,7 +49,11 @@ private PivotSubsystem pivot = new PivotSubsystem();
  private FeederSubsystem feeder = new FeederSubsystem();
 
  //Commands
- ParallelCommandGroup shootcommandParallel = new ParallelCommandGroup(feeder.feederCommand(), indexer.indexCommand(), shooter.shootCommand());
+ //ParallelCommandGroup shootcommandParallel = new ParallelCommandGroup(feeder.feederCommand(), indexer.indexCommand(), shooter.shootCommand());
+  ParallelCommandGroup StopshootcommandParallel = new ParallelCommandGroup(feeder.stop(), indexer.stop(), shooter.stop());
+ ShootCommand shootCommand= new ShootCommand(shooter, indexer, feeder);
+
+ ShootCommandAuto shootCommandAuto = new ShootCommandAuto(shooter, indexer, feeder);
 
     private double MaxSpeed =  TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -84,7 +89,7 @@ private PivotSubsystem pivot = new PivotSubsystem();
     public RobotContainer() {
 
         //FOR PRACTICE - putting command to pathplanner
-        //NamedCommands.registerCommand("Intake", intakeCommand);
+        NamedCommands.registerCommand("ShootCommandAuto", shootCommandAuto);
 
         //PID
 
@@ -199,8 +204,8 @@ feeder.setDefaultCommand(feeder.stop());
 
 
 //Shoot Commands
-xbox.b().whileTrue(shooter.shootCommand());
-xbox.x().whileTrue(shootcommandParallel);
+xbox.b().whileTrue(StopshootcommandParallel);
+xbox.x().whileTrue(shootCommand);
 
 xbox.y().whileTrue(indexer.outtakeCommand());
 
