@@ -110,12 +110,12 @@ public double getEncoder()
 
 public Command slowUp()
 {
-  return run(() -> this.setVelocity(20));
+  return run(() -> this.setVelocity(30));
 }
 
 public Command slowDown()
 {
-  return run(() -> this.setVelocity(-20));
+  return run(() -> this.setVelocity(-30));
 }
 
 public void stop()

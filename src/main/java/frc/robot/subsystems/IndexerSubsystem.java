@@ -83,15 +83,20 @@ public class IndexerSubsystem extends SubsystemBase {
     m_index.setControl(m_velocityVoltage.withVelocity(-30));
 }
 
-public void outtakeOtherSpeed()
+public void indexerintake()
 {
-    m_index.setControl(m_velocityVoltage.withVelocity(-28));
+    m_index.setControl(m_velocityVoltage.withVelocity(-15));
 }
 
 
 public Command indexCommand()
 {
   return run(() -> this.index());
+}
+
+public Command indexerintakeCommand()
+{
+    return run(() -> this.indexerintake());
 }
 
 public Command outtakeCommand()

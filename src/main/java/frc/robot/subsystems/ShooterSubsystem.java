@@ -75,10 +75,10 @@ private void setupShooterMap() {
      * .put(Distance_Meters, Velocity_RPS)
      * Note: RPS values are negative based on your original code (-52.5)
      */
-    m_shooterMap.put(1.0, -40.0);  // Close shot (Subwoofer)
+    m_shooterMap.put(1.0, -38.0);  // Close shot (hub)
     m_shooterMap.put(3.7, -52.5);  // Your known good distance/speed
-    m_shooterMap.put(5.0, -65.0);  // Medium-Long
-    m_shooterMap.put(7.0, -85.0);  // Deep shot
+    m_shooterMap.put(5.0, -60.0);  // Medium-Long
+    m_shooterMap.put(7.0, -75.0);  // Deep shot
   }
 
   /**

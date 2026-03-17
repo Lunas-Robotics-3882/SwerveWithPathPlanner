@@ -57,6 +57,7 @@ private PivotSubsystem pivot = new PivotSubsystem();
  //Commands
  //ParallelCommandGroup shootcommandParallel = new ParallelCommandGroup(feeder.feederCommand(), indexer.indexCommand(), shooter.shootCommand());
   ParallelCommandGroup StopshootcommandParallel = new ParallelCommandGroup(feeder.stop(), indexer.stop(), shooter.stop());
+  ParallelCommandGroup intakeCommandParallel = new ParallelCommandGroup(intake.intakeCommand(), indexer.indexerintakeCommand());
  ShootCommand shootCommand= new ShootCommand(shooter, indexer, feeder);
 
  ShootCommandAuto shootCommandAuto = new ShootCommandAuto(shooter, indexer, feeder);
@@ -156,8 +157,8 @@ private PivotSubsystem pivot = new PivotSubsystem();
     var state = drivetrain.getState();
     
     // 1. Get raw inputs from xboxs
-    double vx = -xbox.getLeftY() * MaxSpeed;
-    double vy = -xbox.getLeftX() * MaxSpeed;
+    double vx = -xbox.getLeftY() * 0.3 * MaxSpeed;
+    double vy = -xbox.getLeftX() * 0.3 * MaxSpeed;
 
     /* 2. POSE PREDICTION (Lookahead)
      * We predict where the robot will be in 50ms to compensate for 
@@ -194,8 +195,9 @@ private PivotSubsystem pivot = new PivotSubsystem();
 
 // Intake Commands
 intake.setDefaultCommand(intake.stop());
-xbox.rightBumper().whileTrue(intake.intakeCommand());
+//xbox.rightBumper().whileTrue(intake.intakeCommand());
 xbox.x().whileTrue(intake.outtakeCommand());
+xbox.rightBumper().whileTrue(intakeCommandParallel);
 
 // Pivot Commands
 pivot.setDefaultCommand(pivot.stopCommand());
@@ -214,10 +216,10 @@ feeder.setDefaultCommand(feeder.stop());
 
 //Shoot Commands
 //xbox.b().whileTrue(StopshootcommandParallel);
-xbox.rightTrigger().whileTrue(shootCommand);
+xbox.b().whileTrue(shootCommand);
 
 // Make sure you are passing 4 arguments: shooter, indexer, feeder, AND the lambda
-xbox.b().whileTrue(
+xbox.rightTrigger().whileTrue(
     new ShootCommandLDistance(shooter, indexer, feeder, (DoubleSupplier)() -> FieldGeomUtils.getDistanceToHub(drivetrain.getState().Pose)));
 
 
