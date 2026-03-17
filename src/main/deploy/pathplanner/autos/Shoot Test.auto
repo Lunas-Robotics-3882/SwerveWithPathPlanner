@@ -5,6 +5,18 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "SimplePath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PivotCommandAuto"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "ShootCommandAuto"

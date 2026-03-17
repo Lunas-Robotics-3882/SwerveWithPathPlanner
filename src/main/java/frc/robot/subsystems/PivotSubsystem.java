@@ -32,9 +32,6 @@ public class PivotSubsystem extends SubsystemBase {
   private double position;
 
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
-  private ShuffleboardTab tab = Shuffleboard.getTab("Pivot");
-  private GenericEntry pivotEncoder = tab.add("Pivot Encoder", 0).getEntry();
-  private GenericEntry pivotVelocity = tab.add("Pivot Velocity", 0).getEntry();
   /** Creates a new PivotSubsystem. */
 
   private final CANBus canbus = new CANBus();
@@ -48,7 +45,7 @@ public class PivotSubsystem extends SubsystemBase {
 
   //Encoder Values
   double homePosition = 0;
-  double DownPos = 129;
+  double DownPos = -26.0;
   double ClimbPosition = 80;
 
   public PivotSubsystem() {
@@ -64,7 +61,7 @@ public class PivotSubsystem extends SubsystemBase {
      configs.Voltage.withPeakForwardVoltage(Volts.of(8))
        .withPeakReverseVoltage(Volts.of(-8));
 
-    configs.Slot1.kP = 80; // An error of 1 rotation results in 60 A output
+    configs.Slot1.kP = 30; // An error of 1 rotation results in 60 A output
     configs.Slot1.kI = 0; // No output for integrated error
     configs.Slot1.kD = 6; // A velocity of 1 rps results in 6 A output
     // Peak output of 120 A
@@ -88,17 +85,22 @@ public void setVelocity(double speed)
 
 public boolean CheckPositionHome()
 {
- return MathUtil.isNear(homePosition,pivot.getPosition().getValueAsDouble(), 1);
+ return MathUtil.isNear(homePosition,pivot.getPosition().getValueAsDouble(), 1.5);
 }
 
 public boolean CheckDownPost()
 {
- return MathUtil.isNear(DownPos,pivot.getPosition().getValueAsDouble(), 1);
+ return MathUtil.isNear(DownPos,pivot.getPosition().getValueAsDouble(), 1.5);
 }
 
 public void setPosition(double setPoint)
 {
   pivot.setControl(m_positionTorque.withPosition(setPoint));
+}
+
+public void setDownPosition()
+{
+  pivot.setControl(m_positionTorque.withPosition(DownPos));
 }
 
 public double getEncoder()
@@ -110,7 +112,6 @@ public Command slowUp()
 {
   return run(() -> this.setVelocity(20));
 }
-
 
 public Command slowDown()
 {
@@ -144,7 +145,7 @@ public Command setHomePosition()
 }
 
 
-public Command setDownPosition()
+public Command setDownPositionCommand()
 {
   return run(() -> this.setPosition(DownPos)); 
 }

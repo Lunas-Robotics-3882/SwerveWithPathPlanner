@@ -43,13 +43,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private final NeutralOut m_brake = new NeutralOut();
 
 
-private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-private GenericEntry shooterSpeed =
-      tab.add("Shooter Speed", 0)
-         .getEntry();
-private GenericEntry shooterVoltage =
-      tab.add("Shooter Voltage", 0)
-         .getEntry();
 
 
 

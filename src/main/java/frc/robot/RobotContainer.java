@@ -29,6 +29,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Commands.IntakeCommand;
+import frc.robot.Commands.PivotCommandAuto;
 import frc.robot.Commands.ShootCommand;
 import frc.robot.Commands.ShootCommandAuto;
 import frc.robot.subsystems.FeederSubsystem;
@@ -54,6 +55,7 @@ private PivotSubsystem pivot = new PivotSubsystem();
  ShootCommand shootCommand= new ShootCommand(shooter, indexer, feeder);
 
  ShootCommandAuto shootCommandAuto = new ShootCommandAuto(shooter, indexer, feeder);
+ PivotCommandAuto pivotCommandAuto = new PivotCommandAuto(pivot);
 
     private double MaxSpeed =  TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -90,6 +92,7 @@ private PivotSubsystem pivot = new PivotSubsystem();
 
         //FOR PRACTICE - putting command to pathplanner
         NamedCommands.registerCommand("ShootCommandAuto", shootCommandAuto);
+        NamedCommands.registerCommand("PivotCommandAuto", pivotCommandAuto);    
 
         //PID
 
@@ -143,43 +146,43 @@ private PivotSubsystem pivot = new PivotSubsystem();
 
 
     // While holding Y, the robot points at the hub but can still be moved with the left stick
-//     xbox.y().whileTrue(drivetrain.applyRequest(() -> {
-//     var state = drivetrain.getState();
+    xbox.y().whileTrue(drivetrain.applyRequest(() -> {
+    var state = drivetrain.getState();
     
-//     // 1. Get raw inputs from xboxs
-//     double vx = -xbox.getLeftY() * MaxSpeed;
-//     double vy = -xbox.getLeftX() * MaxSpeed;
+    // 1. Get raw inputs from xboxs
+    double vx = -xbox.getLeftY() * MaxSpeed;
+    double vy = -xbox.getLeftX() * MaxSpeed;
 
-//     /* 2. POSE PREDICTION (Lookahead)
-//      * We predict where the robot will be in 50ms to compensate for 
-//      * latency and the robot's own momentum.
-//      */
-//     double lookaheadSeconds = 0.050; 
-//     Pose2d futurePose = new Pose2d(
-//         state.Pose.getX() + (state.Speeds.vxMetersPerSecond * lookaheadSeconds),
-//         state.Pose.getY() + (state.Speeds.vyMetersPerSecond * lookaheadSeconds),
-//         state.Pose.getRotation()
-//     );
+    /* 2. POSE PREDICTION (Lookahead)
+     * We predict where the robot will be in 50ms to compensate for 
+     * latency and the robot's own momentum.
+     */
+    double lookaheadSeconds = 0.050; 
+    Pose2d futurePose = new Pose2d(
+        state.Pose.getX() + (state.Speeds.vxMetersPerSecond * lookaheadSeconds),
+        state.Pose.getY() + (state.Speeds.vyMetersPerSecond * lookaheadSeconds),
+        state.Pose.getRotation()
+    );
 
-//     // 3. Calculate target angles using the predicted pose
-//     Rotation2d targetAngle = FieldGeomUtils.getAngleToHub(futurePose);
-//     double distance = FieldGeomUtils.getDistanceToHub(state.Pose);
+    // 3. Calculate target angles using the predicted pose
+    Rotation2d targetAngle = FieldGeomUtils.getAngleToHub(futurePose);
+    double distance = FieldGeomUtils.getDistanceToHub(state.Pose);
 
-//     // 4. LOGGING - Send everything to SmartDashboard for tuning
-//     SmartDashboard.putNumber("AutoAim/Distance Meters", distance);
-//     SmartDashboard.putNumber("AutoAim/Target Heading", targetAngle.getDegrees());
-//     SmartDashboard.putNumber("AutoAim/Current Heading", state.Pose.getRotation().getDegrees());
-//     SmartDashboard.putNumber("AutoAim/Heading Error", targetAngle.minus(state.Pose.getRotation()).getDegrees());
-//     // This logs how much the lookahead is actually changing your target
-//     SmartDashboard.putNumber("AutoAim/Lookahead Offset", 
-//         targetAngle.minus(FieldGeomUtils.getAngleToHub(state.Pose)).getDegrees());
+    // 4. LOGGING - Send everything to SmartDashboard for tuning
+    SmartDashboard.putNumber("AutoAim/Distance Meters", distance);
+    SmartDashboard.putNumber("AutoAim/Target Heading", targetAngle.getDegrees());
+    SmartDashboard.putNumber("AutoAim/Current Heading", state.Pose.getRotation().getDegrees());
+    SmartDashboard.putNumber("AutoAim/Heading Error", targetAngle.minus(state.Pose.getRotation()).getDegrees());
+    // This logs how much the lookahead is actually changing your target
+    SmartDashboard.putNumber("AutoAim/Lookahead Offset", 
+        targetAngle.minus(FieldGeomUtils.getAngleToHub(state.Pose)).getDegrees());
 
-//     // 5. Apply Request with Velocity control for smoothness
-//     return driveAtTarget
-//         .withVelocityX(vx)
-//         .withVelocityY(vy)
-//         .withTargetDirection(targetAngle);
-// }));
+    // 5. Apply Request with Velocity control for smoothness
+    return driveAtTarget
+        .withVelocityX(vx)
+        .withVelocityY(vy)
+        .withTargetDirection(targetAngle);
+}));
 
 
 
@@ -207,7 +210,7 @@ feeder.setDefaultCommand(feeder.stop());
 xbox.b().whileTrue(StopshootcommandParallel);
 xbox.x().whileTrue(shootCommand);
 
-xbox.y().whileTrue(indexer.outtakeCommand());
+//xbox.y().whileTrue(indexer.outtakeCommand());
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

@@ -41,13 +41,6 @@ public class FeederSubsystem extends SubsystemBase {
   private final NeutralOut m_brake = new NeutralOut();
 
 
-private ShuffleboardTab tab = Shuffleboard.getTab("Feeder");
-private GenericEntry feederSpeed =
-      tab.add("Feeder Speed", 0)
-         .getEntry();
-private GenericEntry feederVoltage =
-      tab.add("Feeder Voltage", 0)
-         .getEntry();
 
 
 

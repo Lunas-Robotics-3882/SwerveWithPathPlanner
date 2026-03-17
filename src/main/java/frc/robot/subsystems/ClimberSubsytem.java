@@ -31,9 +31,7 @@ public class ClimberSubsytem extends SubsystemBase {
   private double position;
 
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
-  private ShuffleboardTab tab = Shuffleboard.getTab("Climber");
-  private GenericEntry climberEncoder = tab.add("Climber Encoder", 0).getEntry();
-  private GenericEntry climberVelocity = tab.add("Climber Velocity", 0).getEntry();
+  
   /** Creates a new ClimberSubsystem. */
 
 

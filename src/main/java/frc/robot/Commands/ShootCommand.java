@@ -38,7 +38,7 @@ public class ShootCommand extends Command{
   @Override
   public void execute()
   {
-    if (timer.get() > 0.33)
+    if (timer.get() > 0.2)
     {
       indexer.index();
       feeder.feeder();

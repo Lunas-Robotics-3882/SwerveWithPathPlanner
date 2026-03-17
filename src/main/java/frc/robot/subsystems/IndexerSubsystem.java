@@ -41,13 +41,6 @@ public class IndexerSubsystem extends SubsystemBase {
   private final NeutralOut m_brake = new NeutralOut();
 
 
-private ShuffleboardTab tab = Shuffleboard.getTab("Index");
-private GenericEntry indexSpeed =
-      tab.add("Index Speed", 0)
-         .getEntry();
-private GenericEntry indexVoltage =
-      tab.add("Index Voltage", 0)
-         .getEntry();
 
 
 
