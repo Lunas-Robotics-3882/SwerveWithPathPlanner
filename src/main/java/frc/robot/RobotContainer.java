@@ -150,7 +150,7 @@ private PivotSubsystem pivot = new PivotSubsystem();
 
 
     // While holding Y, the robot points at the hub but can still be moved with the left stick
-    xbox.y().whileTrue(drivetrain.applyRequest(() -> {
+    xbox.leftTrigger().whileTrue(drivetrain.applyRequest(() -> {
     var state = drivetrain.getState();
     
     // 1. Get raw inputs from xboxs
@@ -193,7 +193,7 @@ private PivotSubsystem pivot = new PivotSubsystem();
 // Intake Commands
 intake.setDefaultCommand(intake.stop());
 xbox.rightBumper().whileTrue(intake.intakeCommand());
-xbox.rightTrigger().whileTrue(intake.outtakeCommand());
+xbox.x().whileTrue(intake.outtakeCommand());
 
 // Pivot Commands
 pivot.setDefaultCommand(pivot.stopCommand());
@@ -212,7 +212,7 @@ feeder.setDefaultCommand(feeder.stop());
 
 //Shoot Commands
 //xbox.b().whileTrue(StopshootcommandParallel);
-xbox.x().whileTrue(shootCommand);
+xbox.rightTrigger().whileTrue(shootCommand);
 
 
 
