@@ -69,6 +69,9 @@ private PivotSubsystem pivot = new PivotSubsystem();
 
     private final CommandXboxController xbox = new CommandXboxController(0);
 
+    private final CommandXboxController lxbox = new CommandXboxController(1);
+
+
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     //FOR PRACTICE
@@ -182,8 +185,8 @@ xbox.rightTrigger().whileTrue(intake.outtakeCommand());
 
 // Pivot Commands
 pivot.setDefaultCommand(pivot.stopCommand());
-xbox.pov(0).whileTrue(pivot.slowUp());
-xbox.pov(180).whileTrue(pivot.slowDown());
+lxbox.pov(0).whileTrue(pivot.slowUp());
+lxbox.pov(180).whileTrue(pivot.slowDown());
 
 //Test Shooter Commands
 //Testing
@@ -196,7 +199,7 @@ feeder.setDefaultCommand(feeder.stop());
 
 
 //Shoot Commands
-//xbox.b().whileTrue(shooter.shootCommand());
+xbox.b().whileTrue(shooter.shootCommand());
 xbox.x().whileTrue(shootcommandParallel);
 
 xbox.y().whileTrue(indexer.outtakeCommand());
