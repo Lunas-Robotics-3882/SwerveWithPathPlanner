@@ -39,7 +39,7 @@ import frc.robot.Commands.FieldGeomUtils;
 public class RobotContainer {
 
 // Subsystems
- private IntakeSubsystem intake = new IntakeSubsystem();
+private IntakeSubsystem intake = new IntakeSubsystem();
 private PivotSubsystem pivot = new PivotSubsystem();
 
 
@@ -72,8 +72,8 @@ private PivotSubsystem pivot = new PivotSubsystem();
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     //FOR PRACTICE
-    private final IntakeSubsystem fuelIntake = new IntakeSubsystem();
-    private final IntakeCommand intakeCommand = new IntakeCommand(fuelIntake);
+    //private final IntakeSubsystem fuelIntake = new IntakeSubsystem();
+    //private final IntakeCommand intakeCommand = new IntakeCommand(fuelIntake);
     
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -81,7 +81,7 @@ private PivotSubsystem pivot = new PivotSubsystem();
     public RobotContainer() {
 
         //FOR PRACTICE - putting command to pathplanner
-        NamedCommands.registerCommand("Intake", intakeCommand);
+        //NamedCommands.registerCommand("Intake", intakeCommand);
 
         //PID
 
@@ -175,12 +175,12 @@ private PivotSubsystem pivot = new PivotSubsystem();
 
 
 
-//Intake Commands
+// Intake Commands
 intake.setDefaultCommand(intake.stop());
 xbox.rightBumper().whileTrue(intake.intakeCommand());
 xbox.rightTrigger().whileTrue(intake.outtakeCommand());
 
-//Pivot Commands
+// Pivot Commands
 pivot.setDefaultCommand(pivot.stopCommand());
 xbox.pov(0).whileTrue(pivot.slowUp());
 xbox.pov(180).whileTrue(pivot.slowDown());
@@ -196,7 +196,7 @@ feeder.setDefaultCommand(feeder.stop());
 
 
 //Shoot Commands
-xbox.b().whileTrue(shooter.shootCommand());
+//xbox.b().whileTrue(shooter.shootCommand());
 xbox.x().whileTrue(shootcommandParallel);
 
 xbox.y().whileTrue(indexer.outtakeCommand());

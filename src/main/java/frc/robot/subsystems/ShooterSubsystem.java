@@ -88,6 +88,7 @@ private GenericEntry shooterVoltage =
 
   public void shooter()
 {
+ //m_shooter.setControl(m_velocityVoltage.withVelocity(-10));
   m_shooter.setControl(m_velocityVoltage.withVelocity(-52.5));
 }
 
@@ -125,7 +126,7 @@ public Command stop()
 
   @Override
 public void periodic() {
-    // This method will be called once per scheduler run
+//This method will be called once per scheduler run
 SmartDashboard.putNumber("Shooter Encoder", m_shooter.getPosition().getValueAsDouble());
 SmartDashboard.putNumber("Shooter Velocity", m_shooter.getVelocity().getValueAsDouble());
   }

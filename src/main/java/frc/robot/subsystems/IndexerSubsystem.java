@@ -82,7 +82,7 @@ private GenericEntry indexVoltage =
 
   public void index()
 {
-  m_index.setControl(m_velocityVoltage.withVelocity(75));
+  m_index.setControl(m_velocityVoltage.withVelocity(50));
 }
 
   public void outtake()
