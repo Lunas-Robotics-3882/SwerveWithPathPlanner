@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 
@@ -207,8 +209,25 @@ feeder.setDefaultCommand(feeder.stop());
 
 
 //Shoot Commands
-xbox.b().whileTrue(StopshootcommandParallel);
+//xbox.b().whileTrue(StopshootcommandParallel);
 xbox.x().whileTrue(shootCommand);
+
+xbox.b().whileTrue(
+    new RunCommand(() -> {
+        // 1. Get the current distance from the drivetrain's pose
+        double currentDistance = FieldGeomUtils.getDistanceToHub(drivetrain.getState().Pose);
+        
+        // 2. Get the required speed from our lookup table
+        double targetSpeed = shooter.getTargetVelocity(currentDistance);
+        
+        // 3. Run the shooter
+        shooter.setVelocity(targetSpeed);
+        
+        // Log it so you can verify it's changing!
+        SmartDashboard.putNumber("Shooter/AutoSpeed", targetSpeed);
+    }, shooter)
+).onFalse(new InstantCommand(shooter::disable, shooter));
+
 
 //xbox.y().whileTrue(indexer.outtakeCommand());
 

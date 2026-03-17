@@ -19,6 +19,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -68,6 +69,21 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
 //  COMMANDS  //
+
+// Constants.java or ShooterSubsystem.java
+private final InterpolatingDoubleTreeMap shooterLookupTable = new InterpolatingDoubleTreeMap();
+
+public void initLookupTable() {
+    // .put(Distance_Meters, Velocity_RPS)
+    shooterLookupTable.put(1.5, -40.0);
+    shooterLookupTable.put(3.7, -52.5); // Your known value
+    shooterLookupTable.put(5.0, -65.0);
+    shooterLookupTable.put(7.0, -85.0);
+}
+
+public double getTargetVelocity(double distance) {
+    return shooterLookupTable.get(distance);
+}
 
   public void disable()
   {
