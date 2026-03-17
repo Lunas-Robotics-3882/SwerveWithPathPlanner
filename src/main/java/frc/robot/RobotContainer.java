@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -34,7 +36,7 @@ import frc.robot.Commands.IntakeCommand;
 import frc.robot.Commands.PivotCommandAuto;
 import frc.robot.Commands.ShootCommand;
 import frc.robot.Commands.ShootCommandAuto;
-import frc.robot.Commands.ShootCommandLL;
+import frc.robot.Commands.ShootCommandLDistance;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -214,7 +216,9 @@ feeder.setDefaultCommand(feeder.stop());
 //xbox.b().whileTrue(StopshootcommandParallel);
 xbox.rightTrigger().whileTrue(shootCommand);
 
-
+// Make sure you are passing 4 arguments: shooter, indexer, feeder, AND the lambda
+xbox.b().whileTrue(
+    new ShootCommandLDistance(shooter, indexer, feeder, (DoubleSupplier)() -> FieldGeomUtils.getDistanceToHub(drivetrain.getState().Pose)));
 
 
 //xbox.y().whileTrue(indexer.outtakeCommand());
