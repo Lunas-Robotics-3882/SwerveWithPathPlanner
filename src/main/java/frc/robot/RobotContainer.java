@@ -34,6 +34,7 @@ import frc.robot.Commands.IntakeCommand;
 import frc.robot.Commands.PivotCommandAuto;
 import frc.robot.Commands.ShootCommand;
 import frc.robot.Commands.ShootCommandAuto;
+import frc.robot.Commands.ShootCommandLL;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -58,6 +59,7 @@ private PivotSubsystem pivot = new PivotSubsystem();
 
  ShootCommandAuto shootCommandAuto = new ShootCommandAuto(shooter, indexer, feeder);
  PivotCommandAuto pivotCommandAuto = new PivotCommandAuto(pivot);
+
 
     private double MaxSpeed =  TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -212,21 +214,7 @@ feeder.setDefaultCommand(feeder.stop());
 //xbox.b().whileTrue(StopshootcommandParallel);
 xbox.x().whileTrue(shootCommand);
 
-xbox.b().whileTrue(
-    new RunCommand(() -> {
-        // 1. Get the current distance from the drivetrain's pose
-        double currentDistance = FieldGeomUtils.getDistanceToHub(drivetrain.getState().Pose);
-        
-        // 2. Get the required speed from our lookup table
-        double targetSpeed = shooter.getTargetVelocity(currentDistance);
-        
-        // 3. Run the shooter
-        shooter.setVelocity(targetSpeed);
-        
-        // Log it so you can verify it's changing!
-        SmartDashboard.putNumber("Shooter/AutoSpeed", targetSpeed);
-    }, shooter)
-).onFalse(new InstantCommand(shooter::disable, shooter));
+
 
 
 //xbox.y().whileTrue(indexer.outtakeCommand());

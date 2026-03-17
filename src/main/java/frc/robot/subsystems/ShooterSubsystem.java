@@ -43,9 +43,7 @@ public class ShooterSubsystem extends SubsystemBase {
   /* Keep a neutral out so we can disable the motor */
   private final NeutralOut m_brake = new NeutralOut();
 
-
-
-
+private final InterpolatingDoubleTreeMap m_shooterMap = new InterpolatingDoubleTreeMap();
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
@@ -66,25 +64,39 @@ public class ShooterSubsystem extends SubsystemBase {
   m_followershooter.getConfigurator().apply(configs);
   m_followershooter.setControl(new Follower(m_shooter.getDeviceID(),MotorAlignmentValue.Opposed));
   m_followershooter.setNeutralMode(NeutralModeValue.Coast);
+
+  setupShooterMap();
   }
 
 //  COMMANDS  //
 
-// Constants.java or ShooterSubsystem.java
-private final InterpolatingDoubleTreeMap shooterLookupTable = new InterpolatingDoubleTreeMap();
+private void setupShooterMap() {
+    /* * ADD YOUR TUNED DATA POINTS HERE
+     * .put(Distance_Meters, Velocity_RPS)
+     * Note: RPS values are negative based on your original code (-52.5)
+     */
+    m_shooterMap.put(1.0, -40.0);  // Close shot (Subwoofer)
+    m_shooterMap.put(3.7, -52.5);  // Your known good distance/speed
+    m_shooterMap.put(5.0, -65.0);  // Medium-Long
+    m_shooterMap.put(7.0, -85.0);  // Deep shot
+  }
 
-public void initLookupTable() {
-    // .put(Distance_Meters, Velocity_RPS)
-    shooterLookupTable.put(1.5, -40.0);
-    shooterLookupTable.put(3.7, -52.5); // Your known value
-    shooterLookupTable.put(5.0, -65.0);
-    shooterLookupTable.put(7.0, -85.0);
-}
+  /**
+   * Main method called by your ShootCommand.
+   * Calculates the interpolated speed based on distance.
+   */
+  public void shooter(double distance) {
+    // Get the calculated velocity from our map
+    double targetVelocity = m_shooterMap.get(distance);
+    
+    // Command the motor
+    m_shooter.setControl(m_velocityVoltage.withVelocity(targetVelocity));
 
-public double getTargetVelocity(double distance) {
-    return shooterLookupTable.get(distance);
-}
-
+    // Logging for debugging
+    SmartDashboard.putNumber("Shooter/Current Distance", distance);
+    SmartDashboard.putNumber("Shooter/Target RPS", targetVelocity);
+    SmartDashboard.putNumber("Shooter/Actual RPS", m_shooter.getVelocity().getValueAsDouble());
+  }
   public void disable()
   {
     m_shooter.setControl(m_brake);
