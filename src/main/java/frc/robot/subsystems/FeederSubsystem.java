@@ -83,6 +83,11 @@ public class FeederSubsystem extends SubsystemBase {
     m_feeder.setControl(m_velocityVoltage.withVelocity(30));
 }
 
+  public void Lewikkaouttake()
+{
+    m_feeder.setControl(m_velocityVoltage.withVelocity(15));
+}
+
 public void outtakeOtherSpeed()
 {
     m_feeder.setControl(m_velocityVoltage.withVelocity(28));
@@ -97,6 +102,11 @@ public Command feederCommand()
 public Command outtakeCommand()
 {
   return run(() -> this.outtake());
+}
+
+public Command outtakeCommandLewikka()
+{
+  return run(() -> this.Lewikkaouttake());
 }
 
 public Command withVelocity(double desiredRotationsPerSecond)

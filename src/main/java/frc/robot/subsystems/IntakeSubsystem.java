@@ -80,7 +80,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void outtake()
 {
-    m_intake.setControl(m_velocityVoltage.withVelocity(-30));
+    m_intake.setControl(m_velocityVoltage.withVelocity(-50));
 }
 
 public void outtakeOtherSpeed()

@@ -45,7 +45,7 @@ public class PivotSubsystem extends SubsystemBase {
 
   //Encoder Values
   double homePosition = 0;
-  double DownPos = -26.0;
+  double DownPos = -27.0;
   double ClimbPosition = 80;
 
   public PivotSubsystem() {
@@ -110,12 +110,12 @@ public double getEncoder()
 
 public Command slowUp()
 {
-  return run(() -> this.setVelocity(30));
+  return run(() -> this.setVelocity(38));
 }
 
 public Command slowDown()
 {
-  return run(() -> this.setVelocity(-30));
+  return run(() -> this.setVelocity(-38));
 }
 
 public void stop()

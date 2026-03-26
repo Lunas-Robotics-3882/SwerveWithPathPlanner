@@ -10,7 +10,7 @@ import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 
-public class ShootCommandAuto extends Command{
+public class ShootCommandAutoCenter extends Command{
 
     private Timer timer = new Timer();
 
@@ -20,7 +20,7 @@ public class ShootCommandAuto extends Command{
     
     private boolean firstcheck = true;
 
-    public ShootCommandAuto(ShooterSubsystem shooter,IndexerSubsystem indexer, FeederSubsystem feeder) {
+    public ShootCommandAutoCenter(ShooterSubsystem shooter,IndexerSubsystem indexer, FeederSubsystem feeder) {
         this.shooter = shooter;
         this.indexer = indexer;
         this.feeder = feeder;
@@ -32,7 +32,7 @@ public class ShootCommandAuto extends Command{
   public void initialize() {
     timer.restart();
     timer.start();
-    shooter.shooterAuto();
+    shooter.setVelocity(-43);
   }
 
   @Override

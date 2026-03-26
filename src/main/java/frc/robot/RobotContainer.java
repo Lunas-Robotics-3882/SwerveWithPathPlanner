@@ -33,10 +33,14 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Commands.IntakeCommand;
+import frc.robot.Commands.IntakeCommandGood;
 import frc.robot.Commands.PivotCommandAuto;
 import frc.robot.Commands.ShootCommand;
 import frc.robot.Commands.ShootCommandAuto;
+import frc.robot.Commands.ShootCommandAutoCenter;
+import frc.robot.Commands.ShootCommandAutoLong;
 import frc.robot.Commands.ShootCommandLDistance;
+import frc.robot.Commands.ShootCommandLewikka;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -58,7 +62,13 @@ private PivotSubsystem pivot = new PivotSubsystem();
  //ParallelCommandGroup shootcommandParallel = new ParallelCommandGroup(feeder.feederCommand(), indexer.indexCommand(), shooter.shootCommand());
   ParallelCommandGroup StopshootcommandParallel = new ParallelCommandGroup(feeder.stop(), indexer.stop(), shooter.stop());
   ParallelCommandGroup intakeCommandParallel = new ParallelCommandGroup(intake.intakeCommand(), indexer.indexerintakeCommand());
+
  ShootCommand shootCommand= new ShootCommand(shooter, indexer, feeder);
+ ShootCommandAutoCenter centerShootCommand = new ShootCommandAutoCenter(shooter, indexer, feeder);
+ ShootCommandAutoLong longShootAutoCommand = new ShootCommandAutoLong(shooter, indexer, feeder);
+ IntakeCommandGood intakeCommandGood = new IntakeCommandGood(indexer, intake);
+ ShootCommandLewikka lewikkaShootCommand = new ShootCommandLewikka(shooter, indexer, feeder);
+
 
  ShootCommandAuto shootCommandAuto = new ShootCommandAuto(shooter, indexer, feeder);
  PivotCommandAuto pivotCommandAuto = new PivotCommandAuto(pivot);
@@ -100,6 +110,9 @@ private PivotSubsystem pivot = new PivotSubsystem();
         //FOR PRACTICE - putting command to pathplanner
         NamedCommands.registerCommand("ShootCommandAuto", shootCommandAuto);
         NamedCommands.registerCommand("PivotCommandAuto", pivotCommandAuto);    
+        NamedCommands.registerCommand("CenterShootCommand", centerShootCommand);    
+        NamedCommands.registerCommand("IntakeCommand", intakeCommandParallel);    
+        NamedCommands.registerCommand("ShootCommandAutoLong", longShootAutoCommand);
 
         //PID
 
@@ -204,12 +217,16 @@ private PivotSubsystem pivot = new PivotSubsystem();
 intake.setDefaultCommand(intake.stop());
 //xbox.rightBumper().whileTrue(intake.intakeCommand());
 xbox.x().whileTrue(intake.outtakeCommand());
-xbox.rightBumper().whileTrue(intakeCommandParallel);
+// xbox.rightBumper().whileTrue(intakeCommandGood);
+xbox.rightBumper().whileTrue(intake.intakeCommand());
+
 
 // Pivot Commands
 pivot.setDefaultCommand(pivot.stopCommand());
 lxbox.pov(0).whileTrue(pivot.slowUp());
 lxbox.pov(180).whileTrue(pivot.slowDown());
+lxbox.x().whileTrue(indexer.indexerintakeCommand());
+lxbox.rightTrigger().whileTrue(lewikkaShootCommand);
 
 //Test Shooter Commands
 //Testing

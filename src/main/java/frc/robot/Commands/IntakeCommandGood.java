@@ -7,24 +7,23 @@ import frc.robot.subsystems.LED;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 
-public class ShootCommandAuto extends Command{
+public class IntakeCommandGood extends Command{
 
     private Timer timer = new Timer();
 
      private IndexerSubsystem indexer = new IndexerSubsystem();
-     private ShooterSubsystem shooter = new ShooterSubsystem();
-     private FeederSubsystem feeder = new FeederSubsystem();
-    
+     private IntakeSubsystem intake = new IntakeSubsystem();
+
     private boolean firstcheck = true;
 
-    public ShootCommandAuto(ShooterSubsystem shooter,IndexerSubsystem indexer, FeederSubsystem feeder) {
-        this.shooter = shooter;
+    public IntakeCommandGood(IndexerSubsystem indexer, IntakeSubsystem intake) {
         this.indexer = indexer;
-        this.feeder = feeder;
-        addRequirements(shooter,feeder,indexer);
+        this.intake = intake;
+        addRequirements(indexer, intake);
 
       }
 
@@ -32,34 +31,28 @@ public class ShootCommandAuto extends Command{
   public void initialize() {
     timer.restart();
     timer.start();
-    shooter.shooterAuto();
+    intake.intake();
+    indexer.indexerintake();
   }
 
   @Override
   public void execute()
   {
-    if (timer.get() > 0.33)
+    if (timer.get() > .3)
     {
-      indexer.index();
-      feeder.feeder();
+      indexer.disable();
+      
     }
   }
 
       @Override
       public boolean isFinished() {
-
-        if (timer.get() > 2)
-        {
-          return true;
-        }
-
         return false;
       }
 
      @Override
      public void end(boolean interrupted) {
-      shooter.disable();
       indexer.disable();
-      feeder.disable();
+      intake.disable();
     }
 }

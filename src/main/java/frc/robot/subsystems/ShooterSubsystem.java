@@ -75,10 +75,10 @@ private void setupShooterMap() {
      * .put(Distance_Meters, Velocity_RPS)
      * Note: RPS values are negative based on your original code (-52.5)
      */
-    m_shooterMap.put(1.0, -38.0);  // Close shot (hub)
-    m_shooterMap.put(3.7, -52.5);  // Your known good distance/speed
-    m_shooterMap.put(5.0, -60.0);  // Medium-Long
-    m_shooterMap.put(7.0, -75.0);  // Deep shot
+    m_shooterMap.put(1.0, -36.6);  // Close shot (hub) -36.8, -36.8
+    m_shooterMap.put(3.7, -51.0);  // Your known good distance/speeds -52.3, -52.3
+    m_shooterMap.put(5.0, -56.5);  // Medium-Long   -57.0, -56.8
+    m_shooterMap.put(7.0, -67.8); // Deep shot -69.7, -68.5
   }
 
   /**
@@ -107,10 +107,23 @@ private void setupShooterMap() {
     m_shooter.setControl(m_velocityVoltage.withVelocity(desiredRotationsPerSecond));
 }
 
+
   public void shooter()
 {
+//  m_shooter.setControl(m_velocityVoltage.withVelocity(-10));
+  m_shooter.setControl(m_velocityVoltage.withVelocity(-51.0)); //-52.5
+}
+
+  public void NeutralShot()
+{
  //m_shooter.setControl(m_velocityVoltage.withVelocity(-10));
-  m_shooter.setControl(m_velocityVoltage.withVelocity(-52.5));
+  m_shooter.setControl(m_velocityVoltage.withVelocity(-72));
+}
+
+  public void shooterAuto()
+{
+ //m_shooter.setControl(m_velocityVoltage.withVelocity(-10));
+  m_shooter.setControl(m_velocityVoltage.withVelocity(-52));
 }
 
   public void outtake()
@@ -129,6 +142,12 @@ public Command shootCommand()
   return run(() -> this.shooter());
 }
 
+public Command NeutralShotCommand()
+{
+  return run(() -> this.NeutralShot());
+}
+
+
 public Command outtakeCommand()
 {
   return run(() -> this.outtake());
@@ -136,7 +155,7 @@ public Command outtakeCommand()
 
 public Command withVelocity(double desiredRotationsPerSecond)
 {
-  return runOnce(() -> this.setVelocity(desiredRotationsPerSecond));
+  return run(() -> this.setVelocity(desiredRotationsPerSecond));
 }
 
 public Command stop()
