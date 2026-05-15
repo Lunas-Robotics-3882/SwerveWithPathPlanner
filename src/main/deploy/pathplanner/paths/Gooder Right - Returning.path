@@ -3,43 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5122967189728955,
-        "y": 4.00265335235378
+        "x": 7.3513552068473595,
+        "y": 0.5739087018544944
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8875178316690437,
-        "y": 4.998930099857347
+        "x": 8.351355206847359,
+        "y": 0.5739087018544942
       },
       "isLocked": false,
-      "linkedName": "Center Shot"
+      "linkedName": "Gooder Right - Start"
     },
     {
       "anchor": {
-        "x": 0.5456205420827387,
-        "y": 6.059900142653353
+        "x": 3.767346647646219,
+        "y": 0.5609700427960058
       },
       "prevControl": {
-        "x": 1.244308131241084,
-        "y": 5.749372325249643
+        "x": 2.767346647646219,
+        "y": 0.560970042796006
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Pickup"
+      "linkedName": "Gooder Right - Shot"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.56,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.7462686567164141,
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -47,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 78.36636600105953
   },
   "reversed": false,
-  "folder": "Center Start",
+  "folder": "Gooder Right",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

@@ -65,9 +65,10 @@ private PivotSubsystem pivot = new PivotSubsystem();
 
  ShootCommand shootCommand= new ShootCommand(shooter, indexer, feeder);
  ShootCommandAutoCenter centerShootCommand = new ShootCommandAutoCenter(shooter, indexer, feeder);
- ShootCommandAutoLong longShootAutoCommand = new ShootCommandAutoLong(shooter, indexer, feeder);
+ ShootCommandAutoLong longShootAutoCommand = new ShootCommandAutoLong(shooter, indexer, feeder, intake);
  IntakeCommandGood intakeCommandGood = new IntakeCommandGood(indexer, intake);
  ShootCommandLewikka lewikkaShootCommand = new ShootCommandLewikka(shooter, indexer, feeder);
+
 
 
  ShootCommandAuto shootCommandAuto = new ShootCommandAuto(shooter, indexer, feeder);
@@ -138,8 +139,8 @@ private PivotSubsystem pivot = new PivotSubsystem();
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-xbox.getLeftY() * 0.5 * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-xbox.getLeftX() * 0.5 * MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(-xbox.getLeftY() * 0.6 * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-xbox.getLeftX() * 0.6 * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-xbox.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );

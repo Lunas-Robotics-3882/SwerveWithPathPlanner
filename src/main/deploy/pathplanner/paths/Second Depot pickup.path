@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 0.5456205420827387,
-        "y": 6.059900142653353
+        "x": 0.7189518072289156,
+        "y": 4.974783132530121
       },
       "prevControl": {
-        "x": 1.244308131241084,
-        "y": 5.749372325249643
+        "x": 1.7680120481927715,
+        "y": 5.3353975903614455
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Pickup"
+      "linkedName": "Second Center Pickup"
     }
   ],
   "rotationTargets": [

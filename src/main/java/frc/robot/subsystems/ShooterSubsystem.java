@@ -75,10 +75,10 @@ private void setupShooterMap() {
      * .put(Distance_Meters, Velocity_RPS)
      * Note: RPS values are negative based on your original code (-52.5)
      */
-    m_shooterMap.put(1.0, -36.6);  // Close shot (hub) -36.8, -36.8
+    m_shooterMap.put(1.0, -37.8);  // Close shot (hub) -36.8, -36.8
     m_shooterMap.put(3.7, -51.0);  // Your known good distance/speeds -52.3, -52.3
-    m_shooterMap.put(5.0, -56.5);  // Medium-Long   -57.0, -56.8
-    m_shooterMap.put(7.0, -67.8); // Deep shot -69.7, -68.5
+    m_shooterMap.put(5.0, -56.2);  // Medium-Long   -57.0, -56.8
+    m_shooterMap.put(7.0, -67.9); // Deep shot -69.7, -68.5, -67.3
   }
 
   /**
@@ -111,7 +111,7 @@ private void setupShooterMap() {
   public void shooter()
 {
 //  m_shooter.setControl(m_velocityVoltage.withVelocity(-10));
-  m_shooter.setControl(m_velocityVoltage.withVelocity(-51.0)); //-52.5
+  m_shooter.setControl(m_velocityVoltage.withVelocity(-51.0)); //-52.5, -51.0
 }
 
   public void NeutralShot()
@@ -123,7 +123,7 @@ private void setupShooterMap() {
   public void shooterAuto()
 {
  //m_shooter.setControl(m_velocityVoltage.withVelocity(-10));
-  m_shooter.setControl(m_velocityVoltage.withVelocity(-52));
+  m_shooter.setControl(m_velocityVoltage.withVelocity(-52)); //-52
 }
 
   public void outtake()

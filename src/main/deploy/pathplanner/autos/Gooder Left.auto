@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Center Start"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "PivotCommandAuto"
@@ -19,7 +13,13 @@
         {
           "type": "named",
           "data": {
-            "name": "CenterShootCommand"
+            "name": "ShootCommandAuto"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Gooder Left - Start"
           }
         },
         {
@@ -29,7 +29,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Depot pickup"
+                  "pathName": "Gooder Left - Intake"
                 }
               },
               {
@@ -48,7 +48,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Depot Tehn Shoot"
+                  "pathName": "Gooder Left - Finish Intake"
                 }
               },
               {
@@ -58,50 +58,24 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Gooder Left - Return"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "CenterShootCommand"
+            "name": "ShootCommandAutoLong"
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Second Depot pickup"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeCommand"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Second Depot Tehn Shoot"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CenterShootCommand"
+            "pathName": "Gooder Left - Start"
           }
         }
       ]

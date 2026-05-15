@@ -80,19 +80,27 @@ public class Robot extends TimedRobot {
          * 
          */
         if (true) {
-            LimelightHelpers.setPipelineIndex("limelight-blunas", 1);
+            LimelightHelpers.setPipelineIndex("limelight-blunas", 1);  //1 red, 2 blue
+            //LimelightHelpers.setPipelineIndex("limelight-alunas", 1);
             
             var driveState = m_robotContainer.drivetrain.getState();
             double headingDeg = driveState.Pose.getRotation().getDegrees();
             //double headingDeg = 
             double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
             LimelightHelpers.SetIMUMode("limelight-blunas", 3);
+            //LimelightHelpers.SetIMUMode("limelight-alunas", 3);
             LimelightHelpers.SetRobotOrientation("limelight-blunas",headingDeg , 0, 0, 0, 0, 0);
+           // LimelightHelpers.SetRobotOrientation("limelight-alunas",headingDeg , 0, 0, 0, 0, 0);
             var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-blunas");
+            //var llMeasurement2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-alunas");
             //var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-blunas");
             if (llMeasurement != null && llMeasurement.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
                 m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement.pose, llMeasurement.timestampSeconds);
             }
+           /*  if (llMeasurement2 != null && llMeasurement2.tagCount > 0 && Math.abs(omegaRps) < 2.0) {
+                m_robotContainer.drivetrain.addVisionMeasurement(llMeasurement2.pose, llMeasurement2.timestampSeconds);
+            }
+                */
 
 
             // Meters
